@@ -1,31 +1,22 @@
 // app/dashboard/page.tsx
-export default function Overview() {
+export default function DashboardOverview() {
   return (
     <div className="space-y-8">
       <h1 className="text-3xl font-bold neon-text glitch">Overview</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="card p-6 rounded-xl">
-          <h3 className="text-lg font-medium text-[var(--text-secondary)]">Total Keys Generated</h3>
-          <p className="text-4xl font-black mt-2 text-[var(--accent-cyan)]">1,247</p>
+        <div className="card p-6">
+          <p className="text-[var(--text-secondary)]">Total Keys</p>
+          <p className="text-4xl font-black text-[var(--accent-cyan)] mt-2">1,342</p>
         </div>
-        
-        <div className="card p-6 rounded-xl">
-          <h3 className="text-lg font-medium text-[var(--text-secondary)]">Active Scripts</h3>
-          <p className="text-4xl font-black mt-2 text-[var(--accent-magenta)]">18</p>
+        <div className="card p-6">
+          <p className="text-[var(--text-secondary)]">Active Users</p>
+          <p className="text-4xl font-black text-[var(--accent-magenta)] mt-2">87</p>
         </div>
-        
-        <div className="card p-6 rounded-xl">
-          <h3 className="text-lg font-medium text-[var(--text-secondary)]">Earnings</h3>
-          <p className="text-4xl font-black mt-2 text-green-400">$342.80</p>
+        <div className="card p-6">
+          <p className="text-[var(--text-secondary)]">Earnings</p>
+          <p className="text-4xl font-black text-green-400 mt-2">$487</p>
         </div>
-      </div>
-
-      <div className="card p-6">
-        <h2 className="text-xl font-semibold mb-4">Welcome to NexusGuard</h2>
-        <p className="text-[var(--text-secondary)]">
-          Your powerful Roblox script protection platform. Generate keys, manage providers, and secure your work.
-        </p>
       </div>
     </div>
   )
