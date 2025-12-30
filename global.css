@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-primary: #ffffff;
+  --text-primary: #0f0f1a;
+  --text-secondary: #333344;
+  --accent-cyan: #00d4ff;
+  --accent-magenta: #c300ff;
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --border: #e0e0ff;
+  --glow-cyan: rgba(0, 212, 255, 0.4);
+}
+
+[data-theme="dark"] {
+  --bg-primary: #000000;
+  --text-primary: #f0f0ff;
+  --text-secondary: #a0a0cc;
+  --accent-cyan: #00f0ff;
+  --accent-magenta: #ff00aa;
+  --card-bg: rgba(10, 10, 20, 0.95);
+  --border: #1a1a4a;
+  --glow-cyan: rgba(0, 240, 255, 0.35);
+}
+
+body {
+  @apply bg-[var(--bg-primary)] text-[var(--text-primary)] transition-colors duration-300;
+}
+
+.card {
+  @apply bg-[var(--card-bg)] border border-[var(--border)] shadow-xl backdrop-blur-sm;
+}
+
+.neon-text {
+  @apply text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-cyan)] to-[var(--accent-magenta)];
+}
+
+.glitch {
+  animation: glitch 2s infinite;
+}
+
+.glitch:hover {
+  animation: glitch 0.6s infinite;
+}
+
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+  100% { transform: translate(0); }
+                            }
