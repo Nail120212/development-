@@ -1,54 +1,455 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Nail120212/Fluriore-UI/refs/heads/main/source.lua.txt"))()
 
-:root {
-  --bg-primary: #ffffff;
-  --text-primary: #0f0f1a;
-  --text-secondary: #444466;
-  --accent-cyan: #00d4ff;
-  --accent-magenta: #c300ff;
-  --card-bg: rgba(255, 255, 255, 0.92);
-  --border: #d0d0ff;
-  --glow-cyan: rgba(0, 212, 255, 0.35);
+local Window = Library:MakeGui({
+    NameHub = "Pulse Zero",
+    Description = "Diesel N Steel V1.0",
+    Color = Color3.fromRGB(255, 0, 255)
+})
+
+local InfoTab = Window:CreateTab({ Name = "Info", Icon = "rbxassetid://16932740082" })
+local MainTab = Window:CreateTab({ Name = "Main", Icon = "rbxassetid://16932740082" })
+local OthersTab = Window:CreateTab({ Name = "Others", Icon = "rbxassetid://16932740082" })
+local PaldoTab = Window:CreateTab({ Name = "Paldo", Icon = "rbxassetid://16932740082" })
+
+local DiscordSection = InfoTab:AddSection("Discord")
+
+DiscordSection:AddParagraph({
+    Title = "Join Our Server",
+    Content = "Join our discord server for important news about this script and so you can participate to our giveaways"
+})
+
+DiscordSection:AddButton({
+    Title = "Copy discord",
+    Content = "https://discord.gg/nWfAwb7eN4",
+    Callback = function()
+        if setclipboard then
+            setclipboard("https://discord.gg/nWfAwb7eN4")
+            Library:MakeNotify({ Title = "Copied!", Description = "Discord link copied to clipboard", Content = "https://discord.gg/nWfAwb7eN4" })
+        else
+            Library:MakeNotify({ Title = "Failed", Description = "setclipboard not available", Content = "Please manually copy: https://discord.gg/nWfAwb7eN4" })
+        end
+    end
+})
+
+local PeraSection = PaldoTab:AddSection("Pera pera lang")
+
+PeraSection:AddToggle({
+    Title = "Auto Cash",
+    Content = "Automatic cash farming",
+    Default = false,
+    Callback = function(enabled)
+        _G.AutoCash = enabled
+    end
+})
+
+PeraSection:AddToggle({
+    Title = "Dupl Cash",
+    Content = "Gain high money per take",
+    Default = false,
+    Callback = function(enabled)
+        _G.DuplCash = enabled
+    end
+})
+
+PeraSection:AddToggle({
+    Title = "Dupl Coins",
+    Content = "Get 3k ithink per take",
+    Default = false,
+    Callback = function(enabled)
+        _G.DuplCoins = enabled
+    end
+})
+
+local ExpSection = PaldoTab:AddSection("Exp")
+
+ExpSection:AddToggle({
+    Title = "Auto Exp",
+    Content = "Gain so much exp",
+    Default = false,
+    Callback = function(enabled)
+        _G.ExperienceEnabled = enabled
+    end
+})
+
+ExpSection:AddInput({
+    Title = "Repeat Amount",
+    Content = "Customize the repeatamount",
+    Placeholder = "55",
+    Callback = function(text)
+        local num = tonumber(text)
+        if num and num >= 1 and num <= 300 then
+            _G.RepeatAmount = num
+        else
+            _G.RepeatAmount = 55
+        end
+    end
+})
+
+ExpSection:AddButton({
+    Title = "Teleport to Guiginto Terminal",
+    Callback = function()
+        local Jeepnies = workspace:FindFirstChild("Jeepnies")
+        local Jeepney = Jeepnies and Jeepnies:FindFirstChild(game.Players.LocalPlayer.Name)
+        local TargetCFrame = CFrame.new(-137.74,19,-3010.95)
+        local Pos = TargetCFrame.Position
+        local _, Yaw, _ = TargetCFrame:ToEulerAnglesYXZ()
+        local FlatCFrame = CFrame.new(Pos) * CFrame.Angles(0,Yaw,0)
+        if Jeepney then Jeepney:PivotTo(FlatCFrame) else game.Players.LocalPlayer.Character:PivotTo(FlatCFrame) end
+    end
+})
+
+ExpSection:AddButton({
+    Title = "Teleport to Guiginto Droppoint",
+    Callback = function()
+        local Jeepnies = workspace:FindFirstChild("Jeepnies")
+        local Jeepney = Jeepnies and Jeepnies:FindFirstChild(game.Players.LocalPlayer.Name)
+        local TargetCFrame = CFrame.new(1056.62,19,3241.82)
+        local Pos = TargetCFrame.Position
+        local _, Yaw, _ = TargetCFrame:ToEulerAnglesYXZ()
+        local FlatCFrame = CFrame.new(Pos) * CFrame.Angles(0,Yaw,0)
+        if Jeepney then Jeepney:PivotTo(FlatCFrame) else game.Players.LocalPlayer.Character:PivotTo(FlatCFrame) end
+    end
+})
+
+local DeductSection = MainTab:AddSection("Deduct")
+
+local deductValue = 1
+
+DeductSection:AddInput({
+    Title = "Deduct Amount",
+    Content = "Bawasan mo exp mo! / Bawasan mo pera mo lala",
+    Placeholder = "1",
+    Callback = function(text)
+        local num = tonumber(text)
+        if num and num > 0 then
+            deductValue = num
+        else
+            deductValue = 1
+        end
+    end
+})
+
+DeductSection:AddButton({
+    Title = "Deduct Exp",
+    Callback = function()
+        local args = {[1] = {Value = deductValue, Password = 62199980}}
+        game:GetService("ReplicatedStorage").Remotes.DeductExp:FireServer(unpack(args))
+    end
+})
+
+DeductSection:AddButton({
+    Title = "Deduct Cash",
+    Callback = function()
+        local args = {[1] = {Value = deductValue, Password = 62199980}}
+        game:GetService("ReplicatedStorage").Remotes.DeductCash:FireServer(unpack(args))
+    end
+})
+
+local TeleportsSection = MainTab:AddSection("Teleports")
+
+local teleportLocations = {
+    {Name = "Drop off Bulakan - Guiguinto", Pos = Vector3.new(1049.858, 14.004, 3246.740)},
+    {Name = "Talyer", Pos = Vector3.new(-430.981, 12.701, 620.724)},
+    {Name = "Police Station", Pos = Vector3.new(1240.597, 12.863, 3211.784)},
+    {Name = "Drop Off Guiguinto - Bulakan", Pos = Vector3.new(-1545, 13, -3470)},
+    {Name = "Malolos", Pos = Vector3.new(17796, 13, -1104)},
+    {Name = "Balagtas", Pos = Vector3.new(-3879, 14, 3482)},
+    {Name = "Guiguinto", Pos = Vector3.new(822, 13, 3290)},
+    {Name = "BulakanTerm - Balagtas", Pos = Vector3.new(-626, 16, -3202)},
+    {Name = "BalagtasTerm - Bulakan", Pos = Vector3.new(-3922, 17, 3156)},
+    {Name = "MalolosTerm - Bulakan", Pos = Vector3.new(17606, 16, -1195)},
+    {Name = "GuiguintoTerm - Bulakan", Pos = Vector3.new(1060, 16, 3167)}
 }
 
-[data-theme="dark"] {
-  --bg-primary: #000000;
-  --text-primary: #f0f0ff;
-  --text-secondary: #a0a0cc;
-  --accent-cyan: #00f0ff;
-  --accent-magenta: #ff00aa;
-  --card-bg: rgba(10, 10, 20, 0.92);
-  --border: #1a1a44;
-  --glow-cyan: rgba(0, 240, 255, 0.3);
-}
+for _, loc in ipairs(teleportLocations) do
+    TeleportsSection:AddButton({
+        Title = loc.Name,
+        Callback = function()
+            local Jeepnies = workspace:FindFirstChild("Jeepnies")
+            local Jeepney = Jeepnies and Jeepnies:FindFirstChild(game.Players.LocalPlayer.Name)
+            local TargetCFrame = CFrame.new(loc.Pos)
+            local Pos = TargetCFrame.Position
+            local _, Yaw, _ = TargetCFrame:ToEulerAnglesYXZ()
+            local FlatCFrame = CFrame.new(Pos) * CFrame.Angles(0, Yaw, 0)
+            if Jeepney then
+                Jeepney:PivotTo(FlatCFrame)
+            else
+                game.Players.LocalPlayer.Character:PivotTo(FlatCFrame)
+            end
+        end
+    })
+end
 
-body {
-  @apply bg-[var(--bg-primary)] text-[var(--text-primary)] transition-colors duration-300;
-}
+local SpawnSection = OthersTab:AddSection("Spawn Jeepney")
 
-.card {
-  @apply bg-[var(--card-bg)] border border-[var(--border)] shadow-xl backdrop-blur-sm rounded-xl;
-}
+local selectedJeepney = "Sarao Custombuilt V1 (SH)"
 
-.neon-text {
-  @apply text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-cyan)] to-[var(--accent-magenta)];
-}
+local jeepneyModels = {}
+local jeepniesFolder = game:GetService("ReplicatedStorage"):FindFirstChild("Jeepnies")
 
-.glitch {
-  animation: glitch 2.5s infinite;
-}
+if jeepniesFolder then
+    for _, model in ipairs(jeepniesFolder:GetChildren()) do
+        if model:IsA("Model") then
+            table.insert(jeepneyModels, model.Name)
+        end
+    end
+end
 
-.glitch:hover {
-  animation: glitch 0.7s infinite;
-}
+SpawnSection:AddDropdown({
+    Title = "Select Jeepney",
+    Content = "Choose jeepney to spawn",
+    Multi = false,
+    Options = jeepneyModels,
+    Default = {},
+    Callback = function(selected)
+        selectedJeepney = selected
+    end
+})
 
-@keyframes glitch {
-  0% { transform: translate(0); }
-  20% { transform: translate(-2px, 2px); }
-  40% { transform: translate(-2px, -2px); }
-  60% { transform: translate(2px, 2px); }
-  80% { transform: translate(2px, -2px); }
-  100% { transform: translate(0); }
-}
+SpawnSection:AddButton({
+    Title = "Spawn Selected Jeepney",
+    Callback = function()
+        local args = {
+            [1] = {
+                ["UnitName"] = "Unit 3 (404)",
+                ["JeepneyName"] = selectedJeepney,
+                ["OperatorNpc"] = workspace.Map.Misc.Operators["Mang Juan"]
+            }
+        }
+        pcall(function()
+            game:GetService("ReplicatedStorage").Remotes.SpawnOperatorNPCJeepney:FireServer(unpack(args))
+        end)
+    end
+})
+
+local ProtectionSection = MainTab:AddSection("Protection")
+
+ProtectionSection:AddToggle({
+    Title = "Hide Username",
+    Content = "I hide mo username mo para di ka maban HAHAHHA",
+    Default = true,
+    Callback = function(enabled)
+        _G.HideUsername = enabled
+    end
+})
+
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local function applyHungerLabels()
+    if not _G.HideUsername then return end
+    local hungerLabels = player:WaitForChild("PlayerGui",5):WaitForChild("Screen",5):WaitForChild("Labels",5):WaitForChild("HungerLabels",5)
+    if not hungerLabels then return end
+
+    for _, v in ipairs(hungerLabels:GetChildren()) do
+        if v:IsA("Frame") and (v.Name == "Hunger" or v.Name == "Thirst") then
+            v:Destroy()
+        end
+    end
+
+    for _, v in ipairs(hungerLabels:GetChildren()) do
+        if v:IsA("UICorner") then v:Destroy() end
+    end
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 12)
+    corner.Parent = hungerLabels
+
+    for _, v in ipairs(hungerLabels:GetChildren()) do
+        if v:IsA("UIStroke") then
+            v.Color = Color3.fromRGB(0, 170, 255)
+            v.Thickness = 2
+        end
+    end
+
+    local image = hungerLabels:FindFirstChild("PulseZeroIcon")
+    if not image then
+        image = Instance.new("ImageLabel")
+        image.Name = "PulseZeroIcon"
+        image.Image = "rbxassetid://125890342252654"
+        image.BackgroundTransparency = 1
+        image.Size = UDim2.new(0, 24, 0, 24)
+        image.Position = UDim2.new(0, 8, 0.5, -12)
+        image.Parent = hungerLabels
+    end
+
+    local playerName = hungerLabels:FindFirstChild("PlayerName")
+    if playerName then
+        playerName.Text = "Protected By PulseZero"
+        playerName.TextColor3 = Color3.fromRGB(0, 170, 255)
+        playerName.Position = UDim2.new(0, 40, 0.5, -10)
+        playerName.Size = UDim2.new(1, -48, 0, 20)
+        playerName.TextXAlignment = Enum.TextXAlignment.Left
+
+        local glow = playerName:FindFirstChildOfClass("UIStroke")
+        if glow then glow:Destroy() end
+    end
+end
+
+local function applyOverheadGUI()
+    if not _G.HideUsername then return end
+    local character = player.Character
+    if not character then return end
+
+    local overheadGui
+    if character:FindFirstChild("OverHeadGui") then
+        overheadGui = character.OverHeadGui
+    elseif character:FindFirstChild("Head") and character.Head:FindFirstChild("OverHeadGui") then
+        overheadGui = character.Head.OverHeadGui
+    elseif character:FindFirstChild("HumanoidRootPart") and character.HumanoidRootPart:FindFirstChild("OverHeadGui") then
+        overheadGui = character.HumanoidRootPart.OverHeadGui
+    else
+        for _, obj in ipairs(character:GetDescendants()) do
+            if obj.Name == "OverHeadGui" then
+                overheadGui = obj
+                break
+            end
+        end
+    end
+
+    if not overheadGui then return end
+
+    for _, obj in ipairs(overheadGui:GetChildren()) do
+        if obj:IsA("TextLabel") then
+            local overheadName = obj
+            overheadName.Text = "Protected By PulseZero"
+            overheadName.TextColor3 = Color3.fromRGB(0, 170, 255)
+            overheadName.Position = UDim2.new(0, 40, 0.5, -10)
+            overheadName.Size = UDim2.new(1, -48, 0, 20)
+            overheadName.TextXAlignment = Enum.TextXAlignment.Left
+
+            local glow = overheadName:FindFirstChildOfClass("UIStroke")
+            if glow then glow:Destroy() end
+        end
+    end
+end
+
+task.spawn(function()
+    while true do
+        applyHungerLabels()
+        applyOverheadGUI()
+        task.wait(3)
+    end
+end)
+
+player.CharacterAdded:Connect(function()
+    task.wait(2)
+    applyOverheadGUI()
+end)
+
+local AutoKmSection = OthersTab:AddSection("AutoKm")
+
+local AutoKmSpeed = 550
+
+AutoKmSection:AddToggle({
+    Title = "Auto KM",
+    Content = "Auto drive between points",
+    Default = false,
+    Callback = function(enabled)
+        _G.AutoKmActive = enabled
+    end
+})
+
+AutoKmSection:AddSlider({
+    Title = "Auto KM Speed",
+    Content = "Adjust driving speed",
+    Min = 200,
+    Max = 1000,
+    Default = 550,
+    Callback = function(value)
+        AutoKmSpeed = value
+    end
+})
+
+local DeleteSection = OthersTab:AddSection("DeleteNPCCars")
+
+DeleteSection:AddButton({
+    Title = "DELETE NPC CAR",
+    Content = "REMOVE NPC CAR",
+    Callback = function()
+        local folder = workspace:FindFirstChild("AiVehicles")
+        if folder then folder:Destroy() end
+    end
+})
+
+local RunService = game:GetService("RunService")
+local Remotes = game:GetService("ReplicatedStorage").Remotes
+
+task.spawn(function()
+    while true do
+        if not _G.AutoCash then task.wait(0.5) continue end
+        pcall(function()
+            for i = 1, 10000 do
+                Remotes.Pabarya:InvokeServer({ Amount = 0.5 })
+                Remotes.Pabuo:InvokeServer({ Amount = 0.5 })
+            end
+        end)
+        task.wait(0.01)
+    end
+end)
+
+local RecieveCash = game:GetService("ReplicatedStorage").Remotes.RecieveCash
+
+task.spawn(function()
+    while true do
+        if not _G.DuplCash then task.wait(0.5) continue end
+        pcall(function()
+            for i = 1, 1000 do
+                RecieveCash:FireServer({ Value = 100, Password = 28782728922 })
+            end
+        end)
+        task.wait(0.10)
+    end
+end)
+
+local player = game.Players.LocalPlayer
+local Remotes = game:GetService("ReplicatedStorage").Remotes
+local RecieveCoin = Remotes.RecieveCoin
+local Jeepnies = workspace:WaitForChild("Jeepnies")
+local Jeepney = Jeepnies:WaitForChild(player.Name)
+local PassengerValues = Jeepney:WaitForChild("PassengerValues")
+
+local firedelay = 0.01
+local valueAmount = 300
+
+task.spawn(function()
+    while true do
+        if not _G.DuplCoins then task.wait(0.5) continue end
+        local args = {
+            [1] = {
+                ["PassengerValues"] = PassengerValues,
+                ["Password"] = 838875481,
+                ["Main"] = true,
+                ["Value"] = valueAmount
+            }
+        }
+        pcall(function()
+            RecieveCoin:FireServer(unpack(args))
+        end)
+        task.wait(firedelay)
+    end
+end)
+
+local mt = getrawmetatable(game)
+local oldNamecall = mt.__namecall
+setreadonly(mt, false)
+
+mt.__namecall = function(self, ...)
+    local args = {...}
+    local method = getnamecallmethod()
+
+    if self.Name == "SayMessageRequest" then
+        return oldNamecall(self, ...)
+    end
+
+    if _G.ExperienceEnabled and (method == "FireServer" or method == "InvokeServer") then
+        local repeatCount = _G.RepeatAmount or 55
+        for i = 1, repeatCount do
+            oldNamecall(self, unpack(args))
+        end
+    end
+
+    return oldNamecall(self, ...)
+end
+
+setreadonly(mt, true)
