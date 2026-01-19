@@ -1,243 +1,410 @@
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Nail120212/Fluriore-UI/refs/heads/main/source.lua.txt"))()
+local SugarLibrary = loadstring(game:HttpGetAsync('https://raw.githubusercontent.com/Yomkav2/Sugar-UI/refs/heads/main/Source'))()
 
-local Window = Library:MakeGui({
-    NameHub = "Pulse Zero",
-    Description = "Diesel N Steel V1.0",
-    Color = Color3.fromRGB(255, 0, 255)
+local Window = SugarLibrary.new({
+    Title = "Pulse Zero",
+    Description = "Diesel N Steel V1.1",
+    Keybind = Enum.KeyCode.RightControl,
+    Logo = "rbxassetid://125890342252654"
 })
 
-local InfoTab = Window:CreateTab({ Name = "Info", Icon = "rbxassetid://16932740082" })
-local MainTab = Window:CreateTab({ Name = "Main", Icon = "rbxassetid://16932740082" })
-local OthersTab = Window:CreateTab({ Name = "Others", Icon = "rbxassetid://16932740082" })
-local PaldoTab = Window:CreateTab({ Name = "Paldo", Icon = "rbxassetid://16932740082" })
-
-local DiscordSection = InfoTab:AddSection("Discord")
-
-DiscordSection:AddParagraph({
-    Title = "Join Our Server",
-    Content = "Join our discord server for important news about this script and so you can participate to our giveaways"
+local InfoTab = Window:NewTab({
+    Title = "Info",
+    Description = "Information & Discord",
+    Icon = "info"
 })
 
-DiscordSection:AddButton({
-    Title = "Copy discord",
-    Content = "https://discord.gg/nWfAwb7eN4",
-    Callback = function()
-        if setclipboard then
-            setclipboard("https://discord.gg/nWfAwb7eN4")
-            Library:MakeNotify({ Title = "Copied!", Description = "Discord link copied to clipboard", Content = "https://discord.gg/nWfAwb7eN4" })
-        else
-            Library:MakeNotify({ Title = "Failed", Description = "setclipboard not available", Content = "Please manually copy: https://discord.gg/nWfAwb7eN4" })
-        end
-    end
+local MainTab = Window:NewTab({
+    Title = "Main",
+    Description = "Main Features",
+    Icon = "house"
 })
 
-local PeraSection = PaldoTab:AddSection("Pera pera lang")
-
-PeraSection:AddToggle({
-    Title = "Auto Cash",
-    Content = "Automatic cash farming",
-    Default = false,
-    Callback = function(enabled)
-        _G.AutoCash = enabled
-    end
+local OthersTab = Window:NewTab({
+    Title = "Others",
+    Description = "Miscellaneous Tools",
+    Icon = "folder"
 })
 
-PeraSection:AddToggle({
-    Title = "Dupl Cash",
-    Content = "Gain high money per take",
-    Default = false,
-    Callback = function(enabled)
-        _G.DuplCash = enabled
-    end
+local PaldoTab = Window:NewTab({
+    Title = "Paldo",
+    Description = "Farming & Exp",
+    Icon = "dollar-sign"
 })
 
-PeraSection:AddToggle({
-    Title = "Dupl Coins",
-    Content = "Get 3k ithink per take",
-    Default = false,
-    Callback = function(enabled)
-        _G.DuplCoins = enabled
-    end
-})
+do
+    local DiscordSec = InfoTab:NewSection({
+        Title = "Discord",
+        Icon = "message-circle",
+        Position = "Left"
+    })
 
-local ExpSection = PaldoTab:AddSection("Exp")
+    DiscordSec:NewTitle("Join Our Server")
+    DiscordSec:NewLabel("For news, updates & giveaways")
 
-ExpSection:AddToggle({
-    Title = "Auto Exp",
-    Content = "Gain so much exp",
-    Default = false,
-    Callback = function(enabled)
-        _G.ExperienceEnabled = enabled
-    end
-})
-
-ExpSection:AddInput({
-    Title = "Repeat Amount",
-    Content = "Customize the repeatamount",
-    Placeholder = "55",
-    Callback = function(text)
-        local num = tonumber(text)
-        if num and num >= 1 and num <= 300 then
-            _G.RepeatAmount = num
-        else
-            _G.RepeatAmount = 55
-        end
-    end
-})
-
-ExpSection:AddButton({
-    Title = "Teleport to Guiginto Terminal",
-    Callback = function()
-        local Jeepnies = workspace:FindFirstChild("Jeepnies")
-        local Jeepney = Jeepnies and Jeepnies:FindFirstChild(game.Players.LocalPlayer.Name)
-        local TargetCFrame = CFrame.new(-137.74,19,-3010.95)
-        local Pos = TargetCFrame.Position
-        local _, Yaw, _ = TargetCFrame:ToEulerAnglesYXZ()
-        local FlatCFrame = CFrame.new(Pos) * CFrame.Angles(0,Yaw,0)
-        if Jeepney then Jeepney:PivotTo(FlatCFrame) else game.Players.LocalPlayer.Character:PivotTo(FlatCFrame) end
-    end
-})
-
-ExpSection:AddButton({
-    Title = "Teleport to Guiginto Droppoint",
-    Callback = function()
-        local Jeepnies = workspace:FindFirstChild("Jeepnies")
-        local Jeepney = Jeepnies and Jeepnies:FindFirstChild(game.Players.LocalPlayer.Name)
-        local TargetCFrame = CFrame.new(1056.62,19,3241.82)
-        local Pos = TargetCFrame.Position
-        local _, Yaw, _ = TargetCFrame:ToEulerAnglesYXZ()
-        local FlatCFrame = CFrame.new(Pos) * CFrame.Angles(0,Yaw,0)
-        if Jeepney then Jeepney:PivotTo(FlatCFrame) else game.Players.LocalPlayer.Character:PivotTo(FlatCFrame) end
-    end
-})
-
-local DeductSection = MainTab:AddSection("Deduct")
-
-local deductValue = 1
-
-DeductSection:AddInput({
-    Title = "Deduct Amount",
-    Content = "Bawasan mo exp mo! / Bawasan mo pera mo lala",
-    Placeholder = "1",
-    Callback = function(text)
-        local num = tonumber(text)
-        if num and num > 0 then
-            deductValue = num
-        else
-            deductValue = 1
-        end
-    end
-})
-
-DeductSection:AddButton({
-    Title = "Deduct Exp",
-    Callback = function()
-        local args = {[1] = {Value = deductValue, Password = 62199980}}
-        game:GetService("ReplicatedStorage").Remotes.DeductExp:FireServer(unpack(args))
-    end
-})
-
-DeductSection:AddButton({
-    Title = "Deduct Cash",
-    Callback = function()
-        local args = {[1] = {Value = deductValue, Password = 62199980}}
-        game:GetService("ReplicatedStorage").Remotes.DeductCash:FireServer(unpack(args))
-    end
-})
-
-local TeleportsSection = MainTab:AddSection("Teleports")
-
-local teleportLocations = {
-    {Name = "Drop off Bulakan - Guiguinto", Pos = Vector3.new(1049.858, 14.004, 3246.740)},
-    {Name = "Talyer", Pos = Vector3.new(-430.981, 12.701, 620.724)},
-    {Name = "Police Station", Pos = Vector3.new(1240.597, 12.863, 3211.784)},
-    {Name = "Drop Off Guiguinto - Bulakan", Pos = Vector3.new(-1545, 13, -3470)},
-    {Name = "Malolos", Pos = Vector3.new(17796, 13, -1104)},
-    {Name = "Balagtas", Pos = Vector3.new(-3879, 14, 3482)},
-    {Name = "Guiguinto", Pos = Vector3.new(822, 13, 3290)},
-    {Name = "BulakanTerm - Balagtas", Pos = Vector3.new(-626, 16, -3202)},
-    {Name = "BalagtasTerm - Bulakan", Pos = Vector3.new(-3922, 17, 3156)},
-    {Name = "MalolosTerm - Bulakan", Pos = Vector3.new(17606, 16, -1195)},
-    {Name = "GuiguintoTerm - Bulakan", Pos = Vector3.new(1060, 16, 3167)}
-}
-
-for _, loc in ipairs(teleportLocations) do
-    TeleportsSection:AddButton({
-        Title = loc.Name,
+    DiscordSec:NewButton({
+        Title = "Copy Discord Link",
         Callback = function()
-            local Jeepnies = workspace:FindFirstChild("Jeepnies")
-            local Jeepney = Jeepnies and Jeepnies:FindFirstChild(game.Players.LocalPlayer.Name)
-            local TargetCFrame = CFrame.new(loc.Pos)
-            local Pos = TargetCFrame.Position
-            local _, Yaw, _ = TargetCFrame:ToEulerAnglesYXZ()
-            local FlatCFrame = CFrame.new(Pos) * CFrame.Angles(0, Yaw, 0)
-            if Jeepney then
-                Jeepney:PivotTo(FlatCFrame)
-            else
-                game.Players.LocalPlayer.Character:PivotTo(FlatCFrame)
+            if setclipboard then
+                setclipboard("https://discord.gg/nWfAwb7eN4")
             end
         end
     })
 end
 
-local SpawnSection = OthersTab:AddSection("Spawn Jeepney")
+do
+    local PeraSec = PaldoTab:NewSection({
+        Title = "Pera pera lang",
+        Icon = "dollar-sign",
+        Position = "Left"
+    })
 
-local selectedJeepney = "Sarao Custombuilt V1 (SH)"
+    PeraSec:NewToggle({
+        Title = "Auto Cash",
+        Name = "AutoCash",
+        Default = false,
+        Callback = function(state) _G.AutoCash = state end
+    })
 
-local jeepneyModels = {}
-local jeepniesFolder = game:GetService("ReplicatedStorage"):FindFirstChild("Jeepnies")
+    PeraSec:NewButton({
+        Title = "Dupl Cash",
+        Callback = function()
+            local Players = game:GetService("Players")
+            local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-if jeepniesFolder then
-    for _, model in ipairs(jeepniesFolder:GetChildren()) do
-        if model:IsA("Model") then
-            table.insert(jeepneyModels, model.Name)
+            local ScreenGui = Instance.new("ScreenGui")
+            ScreenGui.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
+
+            local Frame = Instance.new("Frame")
+            Frame.Size = UDim2.new(0, 220, 0, 120)
+            Frame.Position = UDim2.new(0, 210, 0, 56)
+            Frame.BackgroundColor3 = Color3.fromRGB(84, 28, 128)
+            Frame.BorderSizePixel = 0
+            Frame.Active = true
+            Frame.Draggable = true
+            Frame.Parent = ScreenGui
+
+            Instance.new("UICorner", Frame)
+
+            local FrameStroke = Instance.new("UIStroke")
+            FrameStroke.Color = Color3.fromRGB(255, 255, 255)
+            FrameStroke.Thickness = 2
+            FrameStroke.Parent = Frame
+
+            local Title = Instance.new("TextLabel")
+            Title.Size = UDim2.new(1, 0, 0, 32)
+            Title.Position = UDim2.new(0, 0, 0, 4)
+            Title.BackgroundTransparency = 1
+            Title.Text = "Dupe Cash"
+            Title.TextSize = 20
+            Title.Font = Enum.Font.GothamBold
+            Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+            Title.Parent = Frame
+
+            local Toggle = Instance.new("TextButton")
+            Toggle.Size = UDim2.new(0, 180, 0, 55)
+            Toggle.Position = UDim2.new(0.5, -90, 0.5, -5)
+            Toggle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            Toggle.BorderSizePixel = 0
+            Toggle.Text = "Off"
+            Toggle.TextSize = 24
+            Toggle.Font = Enum.Font.GothamBold
+            Toggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+            Toggle.Parent = Frame
+
+            Instance.new("UICorner", Toggle)
+
+            local Gradient = Instance.new("UIGradient")
+            Gradient.Color = ColorSequence.new{
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(42, 255, 7)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(29, 117, 10))
+            }
+            Gradient.Parent = Toggle
+
+            local TextStroke = Instance.new("UIStroke")
+            TextStroke.Color = Color3.fromRGB(0, 0, 0)
+            TextStroke.Thickness = 2
+            TextStroke.Parent = Toggle
+
+            local RecieveCash
+            pcall(function()
+                RecieveCash = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("RecieveCash")
+            end)
+
+            local enabled = false
+
+            task.spawn(function()
+                while true do
+                    if enabled and RecieveCash then
+                        for i = 1, 2000 do
+                            if not enabled then break end
+                            pcall(function()
+                                RecieveCash:FireServer({
+                                    Value = 100,
+                                    Password = 28782728922
+                                })
+                            end)
+                        end
+                    end
+                    task.wait(0.5)
+                end
+            end)
+
+            Toggle.MouseButton1Click:Connect(function()
+                enabled = not enabled
+                Toggle.Text = enabled and "On" or "Off"
+            end)
         end
-    end
+    })
+
+    PeraSec:NewToggle({
+        Title = "Dupl Coins",
+        Name = "DuplCoins",
+        Default = false,
+        Callback = function(state) _G.DuplCoins = state end
+    })
+
+    local ExpSec = PaldoTab:NewSection({
+        Title = "Exp",
+        Icon = "zap",
+        Position = "Right"
+    })
+
+    ExpSec:NewToggle({
+        Title = "Auto Exp",
+        Name = "AutoExp",
+        Default = false,
+        Callback = function(state) _G.ExperienceEnabled = state end
+    })
+
+    ExpSec:NewDropdown({
+        Title = "Repeat Amount",
+        Name = "RepeatAmount",
+        Data = {"55","75","100","200","300","400","500"},
+        Default = "55",
+        Callback = function(selected)
+            _G.RepeatAmount = tonumber(selected) or 55
+        end
+    })
+
+    ExpSec:NewButton({
+        Title = "Teleport to Guiginto Terminal",
+        Callback = function()
+            local Jeepnies = workspace:FindFirstChild("Jeepnies")
+            local Jeepney = Jeepnies and Jeepnies:FindFirstChild(game.Players.LocalPlayer.Name)
+            local TargetCFrame = CFrame.new(-137.74,19,-3010.95)
+            local Pos = TargetCFrame.Position
+            local _, Yaw, _ = TargetCFrame:ToEulerAnglesYXZ()
+            local FlatCFrame = CFrame.new(Pos) * CFrame.Angles(0,Yaw,0)
+            if Jeepney then Jeepney:PivotTo(FlatCFrame) else game.Players.LocalPlayer.Character:PivotTo(FlatCFrame) end
+        end
+    })
+
+    ExpSec:NewButton({
+        Title = "Teleport to Guiginto Droppoint",
+        Callback = function()
+            local Jeepnies = workspace:FindFirstChild("Jeepnies")
+            local Jeepney = Jeepnies and Jeepnies:FindFirstChild(game.Players.LocalPlayer.Name)
+            local TargetCFrame = CFrame.new(1056.62,19,3241.82)
+            local Pos = TargetCFrame.Position
+            local _, Yaw, _ = TargetCFrame:ToEulerAnglesYXZ()
+            local FlatCFrame = CFrame.new(Pos) * CFrame.Angles(0,Yaw,0)
+            if Jeepney then Jeepney:PivotTo(FlatCFrame) else game.Players.LocalPlayer.Character:PivotTo(FlatCFrame) end
+        end
+    })
 end
 
-SpawnSection:AddDropdown({
-    Title = "Select Jeepney",
-    Content = "Choose jeepney to spawn",
-    Multi = false,
-    Options = jeepneyModels,
-    Default = {},
-    Callback = function(selected)
-        selectedJeepney = selected
-    end
-})
+do
+    local DeductSec = MainTab:NewSection({
+        Title = "Deduct",
+        Icon = "minus-circle",
+        Position = "Left"
+    })
 
-SpawnSection:AddButton({
-    Title = "Spawn Selected Jeepney",
-    Callback = function()
-        local args = {
-            [1] = {
-                ["UnitName"] = "Unit 3 (404)",
-                ["JeepneyName"] = selectedJeepney,
-                ["OperatorNpc"] = workspace.Map.Misc.Operators["Mang Juan"]
+    local deductValue = 1
+
+    DeductSec:NewDropdown({
+        Title = "Deduct Amount",
+        Name = "DeductAmt",
+        Data = {"1","5","10","50","100","500","1000"},
+        Default = "1",
+        Callback = function(selected)
+            deductValue = tonumber(selected) or 1
+        end
+    })
+
+    DeductSec:NewButton({
+        Title = "Deduct Exp",
+        Callback = function()
+            local args = {[1] = {Value = deductValue, Password = 62199980}}
+            game:GetService("ReplicatedStorage").Remotes.DeductExp:FireServer(unpack(args))
+        end
+    })
+
+    DeductSec:NewButton({
+        Title = "Deduct Cash",
+        Callback = function()
+            local args = {[1] = {Value = deductValue, Password = 62199980}}
+            game:GetService("ReplicatedStorage").Remotes.DeductCash:FireServer(unpack(args))
+        end
+    })
+
+    local TeleSec = MainTab:NewSection({
+        Title = "Teleports",
+        Icon = "navigation",
+        Position = "Right"
+    })
+
+    local teleports = {
+        {Name = "Talyer",               Pos = Vector3.new(-430.981, 12.701, 620.724)},
+        {Name = "Police Station",       Pos = Vector3.new(1240.597, 12.863, 3211.784)},
+        {Name = "Balagtas Terminal",    Pos = Vector3.new(-625.08, 13.47, -3209.29)},
+        {Name = "Balagtas Drop",        Pos = Vector3.new(-3859.98, 12.96, 3360.72)},
+        {Name = "Malolos Terminal",     Pos = Vector3.new(-1192.02, 13.03, -3019.94)},
+        {Name = "Malolos Drop",         Pos = Vector3.new(17797.02, 13.03, -1087.28)}
+    }
+
+    for _, loc in ipairs(teleports) do
+        TeleSec:NewButton({
+            Title = loc.Name,
+            Callback = function()
+                local Jeepnies = workspace:FindFirstChild("Jeepnies")
+                local Jeepney = Jeepnies and Jeepnies:FindFirstChild(game.Players.LocalPlayer.Name)
+                local TargetCFrame = CFrame.new(loc.Pos)
+                local Pos = TargetCFrame.Position
+                local _, Yaw, _ = TargetCFrame:ToEulerAnglesYXZ()
+                local FlatCFrame = CFrame.new(Pos) * CFrame.Angles(0, Yaw, 0)
+                if Jeepney then Jeepney:PivotTo(FlatCFrame) else game.Players.LocalPlayer.Character:PivotTo(FlatCFrame) end
+            end
+        })
+    end
+
+    local ProtectionSec = MainTab:NewSection({
+        Title = "Protection",
+        Icon = "shield",
+        Position = "Left"
+    })
+
+    ProtectionSec:NewToggle({
+        Title = "Hide Username",
+        Name = "HideUsername",
+        Default = true,
+        Callback = function(state)
+            _G.HideUsername = state
+        end
+    })
+end
+
+do
+    local SpawnSec = OthersTab:NewSection({
+        Title = "Spawn Jeepney",
+        Icon = "car",
+        Position = "Left"
+    })
+
+    local selectedJeepney = "Sarao Custombuilt V1 (SH)"
+    local jeepneyModels = {}
+
+    local jeepniesFolder = game:GetService("ReplicatedStorage"):FindFirstChild("Jeepnies")
+    if jeepniesFolder then
+        for _, model in ipairs(jeepniesFolder:GetChildren()) do
+            if model:IsA("Model") then
+                table.insert(jeepneyModels, model.Name)
+            end
+        end
+    end
+
+    SpawnSec:NewDropdown({
+        Title = "Select Jeepney",
+        Name = "SelectJeepney",
+        Data = jeepneyModels,
+        Default = selectedJeepney,
+        Callback = function(selected)
+            selectedJeepney = selected
+        end
+    })
+
+    SpawnSec:NewButton({
+        Title = "Spawn Selected Jeepney",
+        Callback = function()
+            local args = {
+                [1] = {
+                    ["UnitName"] = "Unit 3 (404)",
+                    ["JeepneyName"] = selectedJeepney,
+                    ["OperatorNpc"] = workspace.Map.Misc.Operators["Mang Juan"]
+                }
             }
-        }
-        pcall(function()
-            game:GetService("ReplicatedStorage").Remotes.SpawnOperatorNPCJeepney:FireServer(unpack(args))
-        end)
-    end
-})
+            pcall(function()
+                game:GetService("ReplicatedStorage").Remotes.SpawnOperatorNPCJeepney:FireServer(unpack(args))
+            end)
+        end
+    })
 
-local ProtectionSection = MainTab:AddSection("Protection")
+    local AutoKmSec = OthersTab:NewSection({
+        Title = "AutoKm",
+        Icon = "gauge",
+        Position = "Right"
+    })
 
-ProtectionSection:AddToggle({
-    Title = "Hide Username",
-    Content = "I hide mo username mo para di ka maban HAHAHHA",
-    Default = true,
-    Callback = function(enabled)
-        _G.HideUsername = enabled
-    end
-})
+    AutoKmSec:NewToggle({
+        Title = "Auto KM",
+        Name = "AutoKM",
+        Default = false,
+        Callback = function(state) _G.AutoKmActive = state end
+    })
+
+    local AutoKmSpeed = 550
+    AutoKmSec:NewSlider({
+        Title = "Auto KM Speed",
+        Name = "AutoKmSpeed",
+        Min = 200,
+        Max = 1000,
+        Default = 550,
+        Increment = 10,
+        Callback = function(value) AutoKmSpeed = value end
+    })
+
+    local DeleteSec = OthersTab:NewSection({
+        Title = "DeleteNPCCars",
+        Icon = "trash-2",
+        Position = "Left"
+    })
+
+    DeleteSec:NewButton({
+        Title = "DELETE NPC CAR",
+        Callback = function()
+            local folder = workspace:FindFirstChild("AiVehicles")
+            if folder then folder:Destroy() end
+        end
+    })
+
+    local AutoKuhaSec = OthersTab:NewSection({
+        Title = "Auto kuha",
+        Icon = "hand",
+        Position = "Right"
+    })
+
+    AutoKuhaSec:NewToggle({
+        Title = "Auto Take",
+        Name = "AutoTake",
+        Default = false,
+        Callback = function(state) _G.AutoTake = state end
+    })
+
+    AutoKuhaSec:NewToggle({
+        Title = "Auto Sukli",
+        Name = "AutoSukli",
+        Default = false,
+        Callback = function(state) _G.AutoSukli = state end
+    })
+end
 
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+local originalPlayerName = player.Name
 
 local function applyHungerLabels()
-    if not _G.HideUsername then return end
     local hungerLabels = player:WaitForChild("PlayerGui",5):WaitForChild("Screen",5):WaitForChild("Labels",5):WaitForChild("HungerLabels",5)
     if not hungerLabels then return end
 
@@ -275,7 +442,11 @@ local function applyHungerLabels()
 
     local playerName = hungerLabels:FindFirstChild("PlayerName")
     if playerName then
-        playerName.Text = "Protected By PulseZero"
+        if _G.HideUsername then
+            playerName.Text = "Protected By PulseZero"
+        else
+            playerName.Text = originalPlayerName
+        end
         playerName.TextColor3 = Color3.fromRGB(0, 170, 255)
         playerName.Position = UDim2.new(0, 40, 0.5, -10)
         playerName.Size = UDim2.new(1, -48, 0, 20)
@@ -287,7 +458,6 @@ local function applyHungerLabels()
 end
 
 local function applyOverheadGUI()
-    if not _G.HideUsername then return end
     local character = player.Character
     if not character then return end
 
@@ -312,7 +482,11 @@ local function applyOverheadGUI()
     for _, obj in ipairs(overheadGui:GetChildren()) do
         if obj:IsA("TextLabel") then
             local overheadName = obj
-            overheadName.Text = "Protected By PulseZero"
+            if _G.HideUsername then
+                overheadName.Text = "Protected By PulseZero"
+            else
+                overheadName.Text = originalPlayerName
+            end
             overheadName.TextColor3 = Color3.fromRGB(0, 170, 255)
             overheadName.Position = UDim2.new(0, 40, 0.5, -10)
             overheadName.Size = UDim2.new(1, -48, 0, 20)
@@ -336,41 +510,6 @@ player.CharacterAdded:Connect(function()
     task.wait(2)
     applyOverheadGUI()
 end)
-
-local AutoKmSection = OthersTab:AddSection("AutoKm")
-
-local AutoKmSpeed = 550
-
-AutoKmSection:AddToggle({
-    Title = "Auto KM",
-    Content = "Auto drive between points",
-    Default = false,
-    Callback = function(enabled)
-        _G.AutoKmActive = enabled
-    end
-})
-
-AutoKmSection:AddSlider({
-    Title = "Auto KM Speed",
-    Content = "Adjust driving speed",
-    Min = 200,
-    Max = 1000,
-    Default = 550,
-    Callback = function(value)
-        AutoKmSpeed = value
-    end
-})
-
-local DeleteSection = OthersTab:AddSection("DeleteNPCCars")
-
-DeleteSection:AddButton({
-    Title = "DELETE NPC CAR",
-    Content = "REMOVE NPC CAR",
-    Callback = function()
-        local folder = workspace:FindFirstChild("AiVehicles")
-        if folder then folder:Destroy() end
-    end
-})
 
 local RunService = game:GetService("RunService")
 local Remotes = game:GetService("ReplicatedStorage").Remotes
